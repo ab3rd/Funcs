@@ -200,6 +200,9 @@ InfoRatio <- function(pnl) {
 	return (mean(pnl)/sd(pnl))
 }
 
+
+#------------------------------------------------------------------------------
+
 ChangeDataFrameNameAccording2Hash <- function(d.f, hash.old2new) {
 
 	#Here d.f is a data.frame
