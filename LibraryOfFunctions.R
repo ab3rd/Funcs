@@ -3,12 +3,12 @@
 
 #------------------------------------------------------------------------------
 #This function is used to decide which folder to use.
-BaseFolderAddress = function() {
-	kore.address = "C:\\Users\\azhang\\Dropbox\\Working\\"
+ALEX_HOME = function(fileName) {
+	kore.address = "C:/Users/azhang/Dropbox/Working"
 	if (file.exists(kore.address)) {
-		return (kore.address )
+		return ( file.path(kore.address, fileName) )
 	} else {
-		return ("C:\\Users\\Alex\\Dropbox\\Working\\")
+		return ( file.path("C:/Users/Alex/Dropbox/Working", fileName) )
 	}
 }
 
