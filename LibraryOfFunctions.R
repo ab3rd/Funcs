@@ -46,6 +46,20 @@ IfNAThen <- function(x, thenVal) {
 	}
 }
 
+YYYY <- function(d) {
+	return (substr(YYYYMMDD(d), 1, 4))
+}
+
+MM <- function(d) {
+	return (substr(YYYYMMDD(d), 5, 6))
+}
+
+DD <- function(d) {
+	return (substr(YYYYMMDD(d), 7, 8))
+}
+
+#------------------------------------------------------------------------------
+
 AddSQ <- function(input) {
 #convert stuff to string and add single quote to two sides.
 	return (paste("'", toString(input), "'", sep = ""))
