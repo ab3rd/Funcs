@@ -128,3 +128,85 @@ Append2Table <- function(new.data, tableName, conn) {
 	return (nrow(new.data))
 
 }
+
+#------------------------------------------------------------------------------
+
+#This function is just for processing Pi Trading's hour and minute which are combined together.
+#For example, if 7 will mean hour 0, minute 7. 107 will mean hour 1, minute 7 while 117 will mean
+#hour 1 minute 17. 1117 will mean hour 11 minute 17.
+
+GetPiTradingHourNum <- function(hm) {
+	hm = as.numeric(hm)
+	
+	if ((hm %% 100) >= 60) { #if this happens, there is something seriously wrong with the input
+		return (NA)
+	} else {
+		return (floor(hm/100))
+	}
+}
+
+#------------------------------------------------------------------------------
+
+GetPiTradingMinuteNum <- function(hm) {
+	hm = as.numeric(hm)
+	
+	if ((hm %% 100) >= 60) { #if this happens, there is something seriously wrong with the input
+		return (NA)
+	} else {
+		return (hm %% 100)
+	}
+}
+
+#------------------------------------------------------------------------------
+
+#This function calculates the PnL and the cum PnL.
+Calc.PnL <- function(p.p, price.col.name, position.col.name) {
+#p.p is assumed to be a data.frame that contains price and position info.
+#price.col.name tells you the column name of the price column where position.col.name tells
+#you about the position column.
+	p.p$PnL = c(0, diff(p.p[, price.col.name], lag = 1)) * c(0, p.p[(2:nrow(p.p)), position.col.name])
+	p.p$Cum.PnL = cumsum(p.p$PnL)
+	
+	return (p.p)
+}
+
+#------------------------------------------------------------------------------
+
+#This function calculates the PnL w carry.
+Calc.FX.PnL <- function(p.p, price.col.name, position.col.name, ir.base.name, ir.quote.name) {
+#p.p is assumed to be a data.frame that contains price and position info.
+#price.col.name tells you the column name of the price column where position.col.name tells
+#you about the position column.
+
+	#browser()
+	
+	#this is only the pricinpal part.
+	price = p.p[, price.col.name]
+	position = p.p[, position.col.name]
+	ir.base = p.p[, ir.base.name]
+	ir.quote = p.p[, ir.quote.name]
+	
+	p.p$PnL = c(0, diff(price, lag = 1)) * c(0, position[(2:nrow(p.p))])
+	#Carry Part
+	p.p$PnL = p.p$PnL + (c(0, ir.base[2:nrow(p.p)])* price /36500 - c(0, ir.quote[2:nrow(p.p)]* price[2:nrow(p.p)])/36500) * c(0, position[(2:nrow(p.p))])
+	p.p$Cum.PnL = cumsum(p.p$PnL)
+	
+	return (p.p)
+}
+
+#------------------------------------------------------------------------------
+
+InfoRatio <- function(pnl) {
+	return (mean(pnl)/sd(pnl))
+}
+
+ChangeDataFrameNameAccording2Hash <- function(d.f, hash.old2new) {
+
+	#Here d.f is a data.frame
+	#hash.old2new is a hash object that maps old names 2 new names
+	for (thisOldName in keys(hash.old2new)) {
+		names(d.f)[names(d.f) == thisOldName] = hash.old2new[[thisOldName]]
+	}
+	
+	return(d.f)
+}
