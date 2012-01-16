@@ -213,3 +213,35 @@ ChangeDataFrameNameAccording2Hash <- function(d.f, hash.old2new) {
 	
 	return(d.f)
 }
+
+#------------------------------------------------------------------------------
+
+Alex.uniroot <- function(f, start_interval, growthRate, tol, maxiter) {
+#We wrap up the R base function uniroot to provide a little bit more flexibility.
+#Here, if the function f gives values of the same sign at both ends of start_interval,
+#We will enlarge the start_interval by the growthRate.
+
+#However, we are assuming that the solution and all the intervals are positive. Otherwise,
+#our way of growing the interval won't work.
+
+#start_interval is assumed to be of the form c(init.left, init.right)
+
+	currentTry = 0
+	
+	while (currentTry < maxiter) {
+	
+		err <- try( this.result <- uniroot(f, start_interval, tol= tol, maxiter = maxiter - currentTry), silent = TRUE )
+
+		if (class(err) == "try-error") { 
+                start_interval = c(start_interval[1]/growthRate, start_interval[2]*growthRate)
+        } else { 
+                return(this.result)	
+        }
+		
+		currentTry = currentTry + 1 #We are counting a failed try as an iteration as well.
+
+	}
+	#if you ever run into this line, you are doomed!
+	return (NA)
+
+}
