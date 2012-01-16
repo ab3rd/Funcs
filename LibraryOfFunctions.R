@@ -79,6 +79,25 @@ GenEmptyDataFrameWNames <- function(col.names, size=0) {
 	return (result)
 }
 
+#------------------------------------------------------------------------------
+
+GenEmptyDataFrameWNames <- function(col.names, size=0) {
+
+	#create matrix with NA. Note we need to treate size = 0 differently.
+	result = data.frame(matrix(NA, nrow = max(1, size), ncol = length(col.names)))
+	names(result) = col.names
+
+	if (size == 0) {
+		#We need to get rid of the first row if the wanted nrow = 0.
+		result = result[-1,]
+	}
+	
+	return (result)
+}
+
+#------------------------------------------------------------------------------
+
+
 Append2Table <- function(new.data, tableName, conn) {
 #new data is supposed to be a data frame whose column names responds to the fields that
 #you want to insert into table. All fields are assumed to be strings.
