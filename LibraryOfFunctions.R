@@ -245,3 +245,9 @@ Alex.uniroot <- function(f, start_interval, growthRate, tol, maxiter) {
 	return (NA)
 
 }
+
+#------------------------------------------------------------------------------
+
+ContainsStr <- function(fullStr, lookfor, ignore.case = TRUE) {
+	return (!length(grep(paste(".*", lookfor, ".*", sep=""), x = fullStr, ignore.case = ignore.case))==0)
+}
