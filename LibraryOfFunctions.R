@@ -254,3 +254,12 @@ Alex.uniroot <- function(f, start_interval, growthRate, tol, maxiter) {
 ContainsStr <- function(fullStr, lookfor, ignore.case = TRUE) {
 	return (!length(grep(paste(".*", lookfor, ".*", sep=""), x = fullStr, ignore.case = ignore.case))==0)
 }
+
+#------------------------------------------------------------------------------
+
+cls <- function() {
+       require(rcom)
+       wsh <- comCreateObject("Wscript.Shell")
+       comInvoke(wsh, "SendKeys", "\014")
+       invisible(wsh)
+}
