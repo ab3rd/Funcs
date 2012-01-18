@@ -96,35 +96,38 @@ GenEmptyDataFrameWNames <- function(col.names, size=0) {
 }
 
 #------------------------------------------------------------------------------
-
-
-Append2Table <- function(new.data, tableName, conn) {
+Append2Table <- function(new.data, tableName, conn, errors = TRUE) {
 #new data is supposed to be a data frame whose column names responds to the fields that
 #you want to insert into table. All fields are assumed to be strings.
 
 	for (i in (1:nrow(new.data))) {
-	
+
 		upload.str =  paste("insert into ", tableName, "(",  sep = "")
-		
+
 		for (j in (1:ncol(new.data))) {
 			upload.str = sprintf("%s %s, ", upload.str, colnames(new.data)[j])
 		}
-		
+
 		upload.str = substr(upload.str, 1, nchar(upload.str)-2)
 		upload.str = paste(upload.str, ") values (", sep = "")
-		
+
 		for (j in (1:ncol(new.data))) {
-			upload.str = sprintf("%s '%s', ", upload.str, download.data[i, j])
+			upload.str = sprintf("%s '%s', ", upload.str, new.data[i, j])
 		}
-		
+
 		upload.str = substr(upload.str, 1, nchar(upload.str)-2)
 		upload.str = paste(upload.str, ")", sep = "")
 		
-		print(upload.str)
-		sqlQuery(channel = conn, query = upload.str)
+		#Try to upload. If an error, print out the SQL and die. Die loudly.
+		err <- try(sqlQuery(channel = conn, query = upload.str, errors = errors))
 		
+		#browser()
+		if (ContainsStr(err, "ERROR")) {
+			print(upload.str)
+			stop("Upload is unsuccessful...")
+		} 
 	}
-	
+
 	return (nrow(new.data))
 
 }
