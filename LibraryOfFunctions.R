@@ -263,3 +263,14 @@ cls <- function() {
        comInvoke(wsh, "SendKeys", "\014")
        invisible(wsh)
 }
+
+
+#------------------------------------------------------------------------------
+
+Z.trim <- function(input) {
+  #We aim to replicate the VBA function trim which removes spaces in the front
+  #and at the end. ALSO: if there are consecutive spaces in between, we are supposed
+  #to let just 1 remain.
+  return (gsub(pattern = " {2,}", replacement =" ", x = gsub(pattern = "^ +| +$", replacement = "", x = input)))
+  
+}
