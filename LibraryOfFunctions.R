@@ -274,3 +274,60 @@ Z.trim <- function(input) {
   return (gsub(pattern = " {2,}", replacement =" ", x = gsub(pattern = "^ +| +$", replacement = "", x = input)))
   
 }
+
+#------------------------------------------------------------------------------_
+
+Z.t2d <- function(tq) {
+  
+  tq = Z.trim(tq)
+  
+  #This function converts a tick quote into a decimal quote. e.g. 9-16 -> 9.5
+  if(!is.na(suppressWarnings(as.numeric(tq)))) {
+    return (as.numeric(tq))
+  }
+  
+  tq.v = strsplit(x= tq, split= "-|:")[[1]]
+  #browser()
+  
+  #the split result cannot be more than 2.
+  if (length(tq.v) > 2) {
+    stop("When split, %s becomes more than 2 parts!", tq)
+  }
+  
+  #after we split, we must make sure that the first part is numeric and the second part
+  #also needs to follow some things.
+  if(is.na(suppressWarnings(as.numeric(tq.v[1])))) {
+    stop(sprintf("The first part of %s i.e. %s is not numeric", tq, tq.v[1]))
+  }
+  
+  p1 = as.numeric(tq.v[1])
+
+  #Deal with the 2nd part
+  p2 = tq.v[2]
+  
+  if(suppressWarnings(is.na(as.numeric(p2)))) {
+
+    #Deal with the 2nd part being like 12+.
+    #browser()
+    if (substr(p2, start=nchar(p2), stop=nchar(p2)) == "+") {
+      return (p1 + as.numeric(substr(p2, start=1, stop=nchar(p2)-1))/32 + 1/64)
+    } else {
+      stop(sprintf("Cannot interpret the 2nd part of %s, i.e. %s", tq, p2))
+    }
+  } else {
+    if(nchar(p2) <= 2) {
+      return (p1+as.numeric(p2)/32)
+    } else {
+      #browser()
+      temp = as.numeric(substr(x = p2, start = 3, stop = nchar(p2)))
+      if (temp >= 8) {
+        stop("Having trouble to interpret!")
+      } else {
+        return (p1+as.numeric(substr(p2, start = 1, stop = 2))/32+temp/256)
+      }
+    }
+  }
+  
+  
+  
+}
