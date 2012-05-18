@@ -275,11 +275,16 @@ Z.trim <- function(input) {
   
 }
 
-#------------------------------------------------------------------------------_
+#-------------------------------------------------------------------------------
 
 Z.t2d <- function(tq) {
   
   tq = Z.trim(tq)
+
+  #We need do deal with the case "14-20 1/8". We need to firstly identify.
+  #if (grepl(" [0-9]+/[0-9]+$", x = tq)) {
+  #  return ()
+  #}
   
   #This function converts a tick quote into a decimal quote. e.g. 9-16 -> 9.5
   if(!is.na(suppressWarnings(as.numeric(tq)))) {
