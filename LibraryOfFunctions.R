@@ -282,9 +282,22 @@ Z.t2d <- function(tq) {
   tq = Z.trim(tq)
 
   #We need do deal with the case "14-20 1/8". We need to firstly identify.
-  #if (grepl(" [0-9]+/[0-9]+$", x = tq)) {
-  #  return ()
-  #}
+  #grepl(" [0-9]+/[0-9]+$", x = tq)
+  #browser()
+  last.digit.pattern = " [0-9]"
+  if (grepl(last.digit.pattern, x = tq)) {
+
+  #Now, we are doing a recursion. We evaluate the first part by calling the function itself.
+  #The last part is a little bit tricky. If it is just 2, like in "10-13 2", then we are assuming
+  #it being equivalent to "10-13 2/8" which is indeed 10 + 13/32 + 2/8*1/32. 
+
+    match.pos = regexpr(pattern = last.digit.pattern, text = tq)
+	val.part1 = Z.t2d(substr(x = tq, start = 1, stop = match.pos))
+	part2 = substr(x = tq, start = match.pos, stop = nchar(tq))
+	val.part2 = ifelse(grepl(pattern ="/[0-9]", x = part2), 1/32, (1/32)*(1/8))*eval(parse(text = part2))
+    return ( val.part1 + val.part2 )
+  }
+
   
   #This function converts a tick quote into a decimal quote. e.g. 9-16 -> 9.5
   if(!is.na(suppressWarnings(as.numeric(tq)))) {
