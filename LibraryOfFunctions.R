@@ -34,7 +34,7 @@ ALEX_HOME = function(fileName) {
 #Using ALEX_HOME to avoid the trouble of having to change addresses.
 ALEX_SOURCE <- function(fileName) {
 	source(ALEX_HOME(fileName))
-	return (sprintf("ALEX_SOURCE call ended at %s", Sys.time()))
+	message(sprintf("ALEX_SOURCE call ended at %s", Sys.time()))
 }
 
 #------------------------------------------------------------------------------
