@@ -2,14 +2,33 @@
 ###############################################################################
 
 #------------------------------------------------------------------------------
-#This function is used to decide which folder to use.
 ALEX_HOME = function(fileName) {
-	kore.address = "C:/Users/azhang/Dropbox/Working"
-	if (file.exists(kore.address)) {
-		return ( file.path(kore.address, fileName) )
-	} else {
-		return ( file.path("C:/Users/Alex/Dropbox/Working", fileName) )
-	}
+
+  #This function helps to solve the problem of having different dropbox and google drive
+  #addresses at home and at work by dynamically testing if the corresponding folders exist.
+  
+  work.gfolder = "C:/Users/azhang/Google Drive/New Work"
+  home.gfolder = "C:/Users/Alex/Dropbox/Working"
+  work.dropbox = "C:/Users/azhang/Dropbox/Working"
+  home.dropbox = "C:/Users/Alex/Dropbox/Working"
+  
+  if (file.exists(work.gfolder)) {
+    #Now, we know that we are at work.
+    if (file.exists(file.path(work.gfolder, fileName))) {
+      return (file.path(work.gfolder, fileName))
+    } else {
+      return (file.path(work.dropbox, fileName))
+    }
+    
+  } else {
+    #Now, we know that we are at home.
+    if (file.exists(file.path(home.gfolder, fileName))) {
+      return (file.path(home.gfolder, fileName))
+    } else {
+      return (file.path(home.dropbox, fileName))
+    }
+  }
+
 }
 
 #Using ALEX_HOME to avoid the trouble of having to change addresses.
