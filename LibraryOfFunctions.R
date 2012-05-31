@@ -44,6 +44,8 @@ YYYYMMDD <- function(d) {
 	return (toString(as.numeric(1900 + p$year)*10000 + (p$mon+1)*100 + p$mday))
 }
 
+#------------------------------------------------------------------------------
+
 ExcelDate <- function(d) {
 #d is assumed to be a Date	
 #stupid Excel believe 2/29/1900 existed...
@@ -55,6 +57,18 @@ if (d > as.Date("1900-02-28")) {
 }
 
 }
+
+#------------------------------------------------------------------------------
+POSIXlt.To.ExcelDateTime <- function(p.time) {
+
+	#Here we convert a POSIXlt date time into an Excel style number
+	date.part = ExcelDate(as.Date(p.time))
+	time.part = p.time$hour/24 + (p.time$min/60)/24 + ((p.time$sec/60)/60)/24
+
+	return (date.part + time.part)
+}
+
+#------------------------------------------------------------------------------
 
 IfNAThen <- function(x, thenVal) {
 #If x is NA then replace with a given value
