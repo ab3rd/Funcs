@@ -379,6 +379,27 @@ Z.t2d <- function(tq) {
     }
   }
   
+Z.delchars <- function(str, n, lead = TRUE){
+#delete certain number of chars.
+  dots = paste(rep('.',n),collapse='') 
+  pat = ifelse(lead, paste('^',dots,sep=''), paste(dots,'$',sep='')) 
+  sub(pat,'',str) 
+}
+
+Z.left <- function(s, n) {
+#mimicking the VBA left function.
+#yeah, I know, it is a shame to mimick VBA but whatever...
+  stopifnot(n >= 0)
+  ifelse(n == 0, "", substr(s, 1, min(nchar(s), n)))
   
+}
+
+Z.right <- function(s, n) {
+  #mimicking the VBA right function.
+  #yeah, I know, it is a shame to mimick VBA but whatever...
+  stopifnot(n >= 0)
+  ifelse(n == 0, "", substr(s, max(1, nchar(s) - n + 1), nchar(s)))
+  
+}
   
 }
