@@ -378,6 +378,8 @@ Z.t2d <- function(tq) {
       }
     }
   }
+
+}
   
 Z.delchars <- function(str, n, lead = TRUE){
 #delete certain number of chars.
@@ -399,7 +401,5 @@ Z.right <- function(s, n) {
   #yeah, I know, it is a shame to mimick VBA but whatever...
   stopifnot(n >= 0)
   ifelse(n == 0, "", substr(s, max(1, nchar(s) - n + 1), nchar(s)))
-  
-}
   
 }
